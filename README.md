@@ -3,14 +3,13 @@
 > If you can write a for-loop, you can do statistics
 > - Jake Vanderplas
 
-A lot of developers shy away from problem which involves statistics or probability. Which is shameful since in today's data-rich environment, you can gain a lot of insights from data.
+A lot of developers shy away from problems which involve statistics or probability. Which is shameful since in today's data-rich environment, you can gain a lot of insights from data.
 
-In the blog post I'll show you a tool the requires no knowledge in statistics or probably - a simulation. Simulation are easy to write and can be very effective tool in research. All you need are some programming skills and a random number generator.
+In the blog post I'll show you a tool that requires no knowledge in statistics or probably - a simulation. Simulations are easy to write and can be a very effective tool in research. All you need are some programming skills and a random number generator.
 
 ## Catan 
 
-In the game of [Catan](https://en.wikipedia.org/wiki/Catan), you gain resource if a roll of two dices matches a number of a tile. At the beginning of the game you place your settlements next to some tiles and would like to pick tiles that have higher probability of being matched.
-
+In the game of [Catan](https://en.wikipedia.org/wiki/Catan), you gain resources if a roll of two dice matches a number of a tile. At the beginning of the game you place your settlements next to some tiles and would like to pick tiles that have higher probability of being matched.
 
 **Listing 1: Dice roll**
 
@@ -27,7 +26,7 @@ Listing one shows one dice roll. On line 12 we adjust the values returned from `
 **Listing 2: Dice roll simulation**
 
 ```
-15 // simulate run n simulation of two game cube rolls and returns the precentage for each total of first and second roll
+15 // simulate run n simulation of two game cube rolls and returns the percentage for each total of first and second roll
 16 func simulate(n int) map[int]float64 {
 17     counts := make(map[int]int)
 18     for i := 0; i < n; i++ {
@@ -45,7 +44,7 @@ Listing one shows one dice roll. On line 12 we adjust the values returned from `
 30 }
 ```
 
-Listing 2 shows a simulation of `n` rolls of two dices. On line 17 we initialize a `counts` map that will count how many times each sum of two dice rolls we saw. On line 19 we simulate a roll of two dices and one line 20 we update the counts.
+Listing 2 shows a simulation of `n` rolls of two dice. On line 17 we initialize a `counts` map that will count how many times each sum of two dice rolls we saw. On line 19 we simulate a roll of two dice and one line 20 we update the counts.
 On lines 23-28 we convert the counts to fractions of the total amount of runs (`n`) and finally on line 29 we return the fractions.
 
 **Listing 3: Running the simulation**
@@ -108,7 +107,7 @@ Let's answer this question for a group of 23 people. Try to guess the answer bef
 24 }
 ```
 
-Listing 5 shows the `hasSame` function. For a group of size `n` it will draw `n` random birthdays. Birthdays are represented as day of year, we have 365 of these.
+Listing 5 shows the `hasSame` function. For a group of size `n` it will draw `n` random birthdays. Birthdays are represented as days since the beginning of the year, we have 365 of these.
 
 On line 14 we initialized a map for already seen birthdays. On line 16 we draw a random day and on line 17 we check if we've seen this day already. If the currently drawn birthday was already seen, we return `true` on line 18. Otherwise we update the `seen` map on line 20. Finally, if there are no duplicated days, we return `false` on line 23.
 
@@ -131,7 +130,7 @@ Now we can run our simulation.
 37 }
 ```
 
-Listing 6 shows the simulation code. We pass the group size and number of iteration as parameters. On line 29 we initialize the number of groups that had at least one duplicate birthday. On line 30 we run check `n` random groups and on line 31 we check if there was a duplicate birthday in the current group. If there is we update the `same` counter on line 32. Finally on line 36 we return the fraction of groups that had same birthday.
+Listing 6 shows the simulation code. We pass the group size and number of iterations as parameters. On line 29 we initialize the number of groups that had at least one duplicate birthday. On line 30 we run check `n` random groups and on line 31 we check if there was a duplicate birthday in the current group. If there is, we update the `same` counter on line 32. Finally on line 36 we return the fraction of groups that had the same birthday.
 
 **Listing 7: Running the simulation**
 
@@ -167,7 +166,7 @@ Listing 8 shows the output of our 10 simulations. We see that the chance that tw
 
 ## Sick or Not?
 
-The following question is taken from Nassim Taleb's [Fooled By Randomness](https://www.amazon.com/Fooled-Randomness-Hidden-Markets-Incerto/dp/0812975219) book (which I highly recommend).
+The following question is taken from Nassim Taleb's [Fooled By Randomness](https://www.amazon.com/Fooled-Randomness-Hidden-Markets-Incerto/dp/0812975219) book which I highly recommend.
 
 > A test of a disease presents a rate of 5% false positives. The disease strikes 1/1000 of the population. People are tested at random, regardless of whether they are suspected of having the disease. A patient’s test is positive. What is the probability of the patient being stricken with the disease?
 
@@ -206,7 +205,7 @@ Listing 9 shows the `probability` function which returns `true` 1/n of the times
 31 }
 ```
 
-Listing 10 show the simulation code. On line 16 we initialized the counters for the number of people who are actually sick `numSick` and the number of people who have been diagnosed as sick `numDiagnosed`. On line 18 we draw and random person who might be sick 1/1000 of the times. If the person is sick, we increment both `numSick` and `numDiagnosed` on lines 20 & 21. On line 32, if the person is not sick, we use a 1/20 probability (5%) to see if they were incorrectly diagnosed as sick. If this is the case, we increment `numDiagnosed` on line 25. Finally we return the fraction of people who are actually sick out the number of people who were diagnosed as sick.
+Listing 10 shows the simulation code. On line 16 we initialized the counters for the number of people who are actually sick `numSick` and the number of people who have been diagnosed as sick `numDiagnosed`. On line 18 we draw a random person who might be sick 1/1000 of the times. If the person is sick, we increment both `numSick` and `numDiagnosed` on lines 20 & 21. On line 32, if the person is not sick, we use a 1/20 probability (5%) to see if they were incorrectly diagnosed as sick. If this is the case, we increment `numDiagnosed` on line 25. Finally we return the fraction of people who are actually sick out of the number of people who were diagnosed as sick.
 
 **Listing 11: Running the simulation**
 
@@ -236,10 +235,12 @@ Listing 11 shows 10 runs of the simulation. One line 34 we initialize the random
 0.018889547520252913
 ```
 
-Listing 12 shows the output of the 10 simulation runs. The changes that a person is sick given a positive test is about 2% which matches the [expected result](https://psychscenehub.com/psychinsights/well-understand-probabilities-medicine/).
+Listing 12 shows the output of the 10 simulation runs. The chances that a person is sick given a positive test is about 2% which matches the [expected result](https://psychscenehub.com/psychinsights/well-understand-probabilities-medicine/).
 
 ## Conclusion
 
-Simulation are simple and powerful tool, you don't need to know advanced probability and statistics in order to solve data driven problems. All you need is `math/rand` and some simple logic. After you get your results, you are encourage to validate them with math. If you don't have the math skills - ask around.
+Simulation is a simple and powerful tool, you don't need to know advanced probability and statistics in order to solve data driven problems. All you need is `math/rand` and some simple logic. After you get your results, you are encouraged to validate them with math. If you don't have the math skills - ask around.
 
-If you want to learn more, I recommend watching [Statistics for Hackers](https://www.youtube.com/watch?v=Iq9DzN6mvYA). The examples are in Python, but very easy to follow. You can also read about the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) on Wikipedia and see the wide variety of applications it has.
+If you want to learn more, I recommend watching [Statistics for Hackers](https://www.youtube.com/watch?v=Iq9DzN6mvYA). The examples are in Python, but very easy to follow. You should also read about the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) on Wikipedia and see the wide variety of applications it has.
+
+You can find the code for these simulations [here](https://github.com/353words/simulations).
