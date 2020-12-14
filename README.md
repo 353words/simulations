@@ -9,13 +9,16 @@ In the blog post I'll show you a tool that requires no knowledge in statistics o
 
 ## Catan 
 
+![](catan.png)
+
+
 In the game of [Catan](https://en.wikipedia.org/wiki/Catan), you gain resources if a roll of two dice matches a number of a tile. At the beginning of the game you place your settlements next to some tiles and would like to pick tiles that have higher probability of being matched.
 
 **Listing 1: Dice roll**
 
 ```
-9 // roll simulate a cube roll
-10 func roll() int {
+9 // diceRoll simulate a dice roll
+10 func diceRoll() int {
 11     // Intn returns values in the range [0-6), we want [1-6]
 12     return rand.Intn(6) + 1
 13 }
@@ -30,7 +33,7 @@ Listing one shows one dice roll. On line 12 we adjust the values returned from `
 16 func simulate(n int) map[int]float64 {
 17     counts := make(map[int]int)
 18     for i := 0; i < n; i++ {
-19         val := roll() + roll()
+19         val := diceRoll() + diceRoll()
 20         counts[val]++
 21     }
 22 
@@ -239,8 +242,9 @@ Listing 12 shows the output of the 10 simulation runs. The chances that a person
 
 ## Conclusion
 
-Simulation is a simple and powerful tool, you don't need to know advanced probability and statistics in order to solve data driven problems. All you need is `math/rand` and some simple logic. After you get your results, you are encouraged to validate them with math. If you don't have the math skills - ask around.
+Simulation is a simple and powerful tool, you don't need to know advanced probability and statistics in order to solve data driven problems. All you need is `math/rand` and some simple logic. After you get your results, you are encouraged to validate them with math. If you don't have the math skills - ask around (I’m asking my friend & college [Shlomo Yona](https://www.mathematic.ai/) whenever I need some math guidance).
 
 If you want to learn more, I recommend watching [Statistics for Hackers](https://www.youtube.com/watch?v=Iq9DzN6mvYA). The examples are in Python, but very easy to follow. You should also read about the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) on Wikipedia and see the wide variety of applications it has.
 
 You can find the code for these simulations [here](https://github.com/353words/simulations).
+Catan photo by [Galen Crout](https://unsplash.com/@galen_crout)
