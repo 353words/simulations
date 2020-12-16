@@ -1,4 +1,5 @@
-// https://en.wikipedia.org/wiki/Birthday_problem
+// Package main simulate the "Birday problem".
+// See https://en.wikipedia.org/wiki/Birthday_problem for a description of the problem.
 package main
 
 import (
@@ -7,7 +8,7 @@ import (
 	"time"
 )
 
-// hasSame returns True is a random group has the same birthday
+// hasSame returns True if at least two people in a random group has the same birthday.
 func hasSame(groupSize int) bool {
 	const daysInYear = 365
 
@@ -23,8 +24,7 @@ func hasSame(groupSize int) bool {
 	return false
 }
 
-// simulateBirthdays returns the fraction of groups that have at two people
-// with the same birthday
+// simulateBirthdays returns the fraction of groups that have at two people with the same birthday.
 func simulateBirthdays(groupSize, n int) float64 {
 	same := 0
 	for i := 0; i < n; i++ {

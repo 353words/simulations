@@ -1,3 +1,4 @@
+// Package main simulate two-sice rolls.
 package main
 
 import (
@@ -6,13 +7,14 @@ import (
 	"time"
 )
 
-// diceRoll simulate a dice roll
+// diceRoll simulate a dice roll.
 func diceRoll() int {
-	// Intn returns values in the range [0-6), we want [1-6]
+	// Intn(6) returns values in the range 0-5 (inclusive), we want 1-6.
 	return rand.Intn(6) + 1
 }
 
-// simulate run n simulation of two game cube rolls and returns the percentage for each total of first and second roll
+// simulate runs n simulation of two game cube rolls.
+// It returns the percentage for each total of first and second roll.
 func simulate(n int) map[int]float64 {
 	counts := make(map[int]int)
 	for i := 0; i < n; i++ {
@@ -20,12 +22,13 @@ func simulate(n int) map[int]float64 {
 		counts[val]++
 	}
 
-	// Convert counts to fractions
+	// Convert from counts to fractions.
 	fracs := make(map[int]float64)
 	for val, count := range counts {
 		frac := float64(count) / float64(n)
 		fracs[val] = frac
 	}
+
 	return fracs
 }
 
