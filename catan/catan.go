@@ -4,7 +4,6 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"time"
 )
 
 // diceRoll simulate a dice roll.
@@ -33,8 +32,6 @@ func simulate(n int) map[int]float64 {
 }
 
 func main() {
-	rand.Seed(time.Now().Unix())
-
 	fracs := simulate(1_000_000)
 	for i := 2; i <= 12; i++ {
 		fmt.Printf("%2d -> %.2f\n", i, fracs[i])
