@@ -5,11 +5,11 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"time"
 )
 
-// hasSame returns True if at least two people in a random group has the same birthday.
-func hasSame(groupSize int) bool {
+// duplicateBirthdayInGroup returns True if at least two people in a random
+// group has the same birthday.
+func duplicateBirthdayInGroup(groupSize int) bool {
 	const daysInYear = 365
 
 	seen := make(map[int]bool)
@@ -24,11 +24,12 @@ func hasSame(groupSize int) bool {
 	return false
 }
 
-// simulateBirthdays returns the fraction of groups that have at two people with the same birthday.
+// simulateBirthdays draws "n" random group of "groupSize" people and returns
+// the fraction of groups that have at least two people with the same birthday.
 func simulateBirthdays(groupSize, n int) float64 {
 	same := 0
 	for i := 0; i < n; i++ {
-		if hasSame(groupSize) {
+		if duplicateBirthdayInGroup(groupSize) {
 			same++
 		}
 	}
@@ -37,9 +38,5 @@ func simulateBirthdays(groupSize, n int) float64 {
 }
 
 func main() {
-	rand.Seed(time.Now().Unix())
-
-	for i := 0; i < 10; i++ {
-		fmt.Println(simulateBirthdays(23, 1_000_00))
-	}
+	fmt.Println(simulateBirthdays(23, 1_000_00))
 }
