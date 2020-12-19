@@ -6,7 +6,6 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"time"
 )
 
 // probability returns true 1/n of times.
@@ -36,8 +35,5 @@ func simulate(n int) float64 {
 }
 
 func main() {
-	rand.Seed(time.Now().Unix())
-	for i := 0; i < 10; i++ {
-		fmt.Println(simulate(1_000_000))
-	}
+	fmt.Println(simulate(1_000_000))
 }
