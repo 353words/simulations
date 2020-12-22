@@ -7,13 +7,14 @@ import (
 	"math/rand"
 )
 
-// duplicateBirthdayInGroup returns True if at least two people in a random
-// group has the same birthday.
-func duplicateBirthdayInGroup(groupSize int) bool {
+// simulateBirthdayMatches returns true if the same number is selected
+// twice by the random number generator selecting a number between
+// 0 and 365 for a specified group of people.
+func simulateBirthdayMatches(numOfPeople int) bool {
 	const daysInYear = 365
 
 	seen := make(map[int]bool)
-	for i := 0; i < groupSize; i++ {
+	for i := 0; i < numOfPeople; i++ {
 		day := rand.Intn(daysInYear)
 		if seen[day] {
 			return true
@@ -24,17 +25,17 @@ func duplicateBirthdayInGroup(groupSize int) bool {
 	return false
 }
 
-// simulateBirthdays draws "n" random group of "groupSize" people and returns
-// the fraction of groups that have at least two people with the same birthday.
-func simulateBirthdays(groupSize, n int) float64 {
+// simulateBirthdays returns the fraction of groups
+// that have two people with the same birthday.
+func simulateBirthdays(numOfPeople, runs int) float64 {
 	same := 0
-	for i := 0; i < n; i++ {
-		if duplicateBirthdayInGroup(groupSize) {
+	for i := 0; i < runs; i++ {
+		if simulateBirthdayMatches(numOfPeople) {
 			same++
 		}
 	}
 
-	return float64(same) / float64(n)
+	return float64(same) / float64(runs)
 }
 
 func main() {

@@ -14,9 +14,9 @@ func diceRoll() int {
 
 // simulate runs n simulation of two game cube rolls.
 // It returns the percentage for each total of first and second roll.
-func simulate(n int) map[int]float64 {
+func simulate(runs int) map[int]float64 {
 	counts := make(map[int]int)
-	for i := 0; i < n; i++ {
+	for i := 0; i < runs; i++ {
 		val := diceRoll() + diceRoll()
 		counts[val]++
 	}
@@ -24,7 +24,7 @@ func simulate(n int) map[int]float64 {
 	// Convert from counts to fractions.
 	fracs := make(map[int]float64)
 	for val, count := range counts {
-		frac := float64(count) / float64(n)
+		frac := float64(count) / float64(runs)
 		fracs[val] = frac
 	}
 
