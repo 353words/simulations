@@ -25,7 +25,7 @@ func diagnosed(sick bool) bool {
 		return true // We're 100% correct in sick people.
 	}
 
-	// The test of a disease presents a rate of 5% (1 in 20) false positives
+	// The test of a disease presents a rate of 5% (1 in 20) false positives.
 	// (false positive = healty diagnosed as sick)
 	return oneChanceIn(20)
 }
