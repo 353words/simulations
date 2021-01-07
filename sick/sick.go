@@ -13,7 +13,7 @@ func oneChanceIn(n int) bool {
 	return rand.Intn(n) == 1
 }
 
-// simulate run selects n random people and return the fraction of people
+// simulate run selects sampleSize random people and return the fraction of people
 // actually sick from the total number of people diagnosed as sick.
 func simulate(sampleSize int) float64 {
 	var numSick, numDiagnosed int
