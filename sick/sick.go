@@ -15,6 +15,7 @@ func oneChanceIn(n int) bool {
 
 // isSick returns true is a randomly sampled person is sick.
 func isSick() bool {
+	// The disease strikes 1/1000 of the population.
 	return oneChanceIn(1000)
 }
 
@@ -24,7 +25,8 @@ func diagnosed(sick bool) bool {
 		return true // We're 100% correct in sick people.
 	}
 
-	// There's a 5% chance (1 in 20) that we'll diagnose a healthy person as sick.
+	// The test of a disease presents a rate of 5% (1 in 20) false positives
+	// (false positive = healty diagnosed as sick)
 	return oneChanceIn(20)
 }
 
@@ -34,7 +36,6 @@ func simulate(sampleSize int) float64 {
 	var numSick, numDiagnosed int
 
 	for i := 0; i < sampleSize; i++ {
-		// The disease strikes 1/1000 of the population.
 		sick := isSick()
 		if sick {
 			numSick++
