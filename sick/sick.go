@@ -8,9 +8,9 @@ import (
 	"math/rand"
 )
 
-// positiveCase returns true for 1 patient in a specified group of patients.
-func positiveCase(numberOfPatients int) bool {
-	return rand.Intn(numberOfPatients) == 1
+// oneIn returns true one in n times.
+func oneIn(n int) bool {
+	return rand.Intn(n) == 1
 }
 
 // simulate run selects n random people and return the fraction of people
@@ -19,14 +19,14 @@ func simulate(n int) float64 {
 	var numSick, numDiagnosed int
 	for i := 0; i < n; i++ {
 		// A person has 1/1000 chance of being sick.
-		sick := positiveCase(1000)
+		sick := oneIn(1000)
 		if sick {
 			numSick++
 			numDiagnosed++
 			continue
 		}
 		// A healthy person has a 5% chance of being diagnosed as sick.
-		if positiveCase(20) {
+		if oneIn(20) {
 			numDiagnosed++
 		}
 	}
