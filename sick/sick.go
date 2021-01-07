@@ -13,21 +13,35 @@ func oneChanceIn(n int) bool {
 	return rand.Intn(n) == 1
 }
 
+// isSick returns true is a randomly sampled person is sick.
+func isSick() bool {
+	return oneChanceIn(1000)
+}
+
+// diagnosed return true is a person we diagnosed as sick.
+func diagnosed(sick bool) bool {
+	if sick {
+		return true // We're 100% correct in sick people.
+	}
+
+	// There's a 5% chance (1 in 20) that we'll diagnose a healthy person as sick.
+	return oneChanceIn(20)
+}
+
 // simulate run selects sampleSize random people and return the fraction of people
 // actually sick from the total number of people diagnosed as sick.
 func simulate(sampleSize int) float64 {
 	var numSick, numDiagnosed int
+
 	for i := 0; i < sampleSize; i++ {
-		// A person has 1/1000 chance of being sick.
-		sick := oneChanceIn(1000)
+		// The disease strikes 1/1000 of the population.
+		sick := isSick()
 		if sick {
 			numSick++
+		}
+
+		if diagnosed(sick) {
 			numDiagnosed++
-		} else {
-			// A healthy person has a 5% chance of being diagnosed as sick.
-			if oneChanceIn(20) {
-				numDiagnosed++
-			}
 		}
 	}
 
