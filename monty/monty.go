@@ -7,16 +7,12 @@ import (
 	"math/rand"
 )
 
-// game is a single simulation of game. It return true/false for stay win and switch win
-func game() (bool, bool) {
+// stayWinsGame is a single simulation of game. It return true if "stay" strategy wins.
+func stayWinsGame() bool {
 	carDoor := rand.Intn(3)
 	playerDoor := rand.Intn(3)
 
-	if carDoor == playerDoor { // stay wins
-		return true, false
-	}
-
-	return false, true // switch wins
+	return carDoor == playerDoor
 }
 
 // fraction return a/b as float
@@ -24,15 +20,14 @@ func fraction(a, b int) float64 {
 	return float64(a) / float64(b)
 }
 
-// simulation runs n games and return the fraction of games where "stay" strategy won and fraction where "switch" strategy won
+// simulation runs n games and return the fraction of games where "stay"
+// strategy won and fraction where "switch" strategy won
 func simulation(n int) (float64, float64) {
 	stayWin, switchWin := 0, 0
 	for i := 0; i < n; i++ {
-		st, sw := game()
-		if st {
+		if stayWinsGame() {
 			stayWin++
-		}
-		if sw {
+		} else {
 			switchWin++
 		}
 	}
