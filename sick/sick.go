@@ -19,7 +19,7 @@ func isSick() bool {
 	return oneChanceIn(1000)
 }
 
-// diagnosed return true is a person we diagnosed as sick.
+// diagnosed returns true if a person is sick or misdiagnosed as sick.
 func diagnosed(sick bool) bool {
 	if sick {
 		return true // We're 100% correct in sick people.

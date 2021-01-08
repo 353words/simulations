@@ -1,61 +1,63 @@
-# Using Simulations
+### Introduction
 
-> If you can write a for-loop, you can do statistics
+> If you can write a for-loop, you can do statistics.
 > - Jake Vanderplas
 
 A lot of developers shy away from problems which involve statistics or probability. Which is shameful since in today's data-rich environment, you can gain a lot of insights from data.
 
-In the blog post I'll show you a tool that requires no knowledge in statistics or probably - a simulation. Simulations are easy to write and can be a very effective tool in research. All you need are some programming skills and a random number generator.
+In this blog post, I'll show you how to write a simulation tool which requires no knowledge in statistics or probability. Simulations are easy to write and can be a very effective tool in research. You only need some basic programming skills and a random number generator.
 
-## Catan 
+### Catan 
 
 ![](catan.png)
 
 
-In the game of [Catan](https://en.wikipedia.org/wiki/Catan), you gain resources if a roll of two dice matches a number of a tile. At the beginning of the game you place your settlements next to some tiles and would like to pick tiles that have higher probability of being matched.
+In the game of [Catan](https://en.wikipedia.org/wiki/Catan), you gain resources when a roll of two dice match a number of a tile on the board. At the beginning of the game, you place your settlements next to tiles with the idea of selecting titles that have a higher probability of being matched.
 
-**Listing 1: Dice roll**
+The first thing we need for our simulation is the ability to roll a die and get the result.
 
+**Listing 1: Dice roll**  
 ```
-9 // diceRoll simulate a dice roll
+09 // diceRoll simulate a dice roll.
 10 func diceRoll() int {
-11     // Intn returns values in the range [0-6), we want [1-6]
+11     // Intn(6) returns values in the range 0-5 (inclusive), we want 1-6.
 12     return rand.Intn(6) + 1
 13 }
 ```
 
-Listing one shows one dice roll. On line 12 we adjust the values returned from `rand.Intn(6)` to be 1-6 instead of 0-5.
+Listing 1 shows how we will perform a single dice roll for our simulation. On line 12, we use the random `Intn` function from the `math` package and adjust the values returned to be 1-6 instead of 0-5.
 
-**Listing 2: Dice roll simulation**
+Next, we need to simulate rolling two dice over and over to learn what sum’s of the two dice tend to be rolled the most.
 
+**Listing 2: Dice roll simulation**  
 ```
-15 // simulate run n simulation of two game cube rolls and returns the percentage for each total of first and second roll
-16 func simulate(n int) map[int]float64 {
-17     counts := make(map[int]int)
-18     for i := 0; i < n; i++ {
-19         val := diceRoll() + diceRoll()
-20         counts[val]++
-21     }
-22 
-23     // Convert counts to fractions
-24     fracs := make(map[int]float64)
-25     for val, count := range counts {
-26         frac := float64(count) / float64(n)
-27         fracs[val] = frac
-28     }
-29     return fracs
-30 }
+15 // simulate executes “runs” two game cube rolls.
+16 // It returns the percentage for each total of first and second roll.
+17 func simulate(runs int) map[int]float64 {
+18     counts := make(map[int]int)
+19     for i := 0; i < runs; i++ {
+20         val := diceRoll() + diceRoll()
+21         counts[val]++
+22     }
+23 
+24     // Convert from counts to fractions.
+25     fracs := make(map[int]float64)
+26     for val, count := range counts {
+27         frac := float64(count) / float64(runs)
+28         fracs[val] = frac
+29     }
+30 
+31     return fracs
+32 }
 ```
 
-Listing 2 shows a simulation of `n` rolls of two dice. On line 17 we initialize a `counts` map that will count how many times each sum of two dice rolls we saw. On line 19 we simulate a roll of two dice and one line 20 we update the counts.
-On lines 23-28 we convert the counts to fractions of the total amount of runs (`n`) and finally on line 29 we return the fractions.
+Listing 2 shows our `simulation` function. This function rolls two dice `runs` number of times and returns the percent of time any given sum was rolled over `n`. On line 18, we initialize a `counts` map that will hold the counts for the different sum’s rolled. On line 20, we roll the two dice and calculate the sum. On line 21, we update the count for that sum in the map. On lines 25-29, we convert the sums to fractions based on the total number of rolls and finally on line 31, we return the results.
 
-**Listing 3: Running the simulation**
+Finally, we need a little application to run the simulation.
 
+**Listing 3: Running the simulation**  
 ```
-32 func main() {
-33     rand.Seed(time.Now().Unix())
-34 
+34 func main() {
 35     fracs := simulate(1_000_000)
 36     for i := 2; i <= 12; i++ {
 37         fmt.Printf("%2d -> %.2f\n", i, fracs[i])
@@ -63,10 +65,9 @@ On lines 23-28 we convert the counts to fractions of the total amount of runs (`
 39 }
 ```
 
-Listing 3 shows how we run the simulation. On line 33 we seed the random number generator from the current time to get different results every time we run the program. On line 35 we run the simulation on lines 36-38 we print the results.
+Listing 3 shows how we run the simulation. On line 35, we run the simulation and on lines 36-39, we print the results.
 
-**Listing 4: Output**
-
+**Listing 4: Output**  
 ```
  2 -> 0.03
  3 -> 0.06
@@ -81,170 +82,175 @@ Listing 3 shows how we run the simulation. On line 33 we seed the random number 
 12 -> 0.03
 ```
 
-Listing 4 shows the output of the simulation run. 7 is the winner with 6 & 8 in tie for second place. 
+Listing 4 shows the output of running the simulation one time. In this run, the sum of 7 is the winner with 6 and 8 in a tie for second place. Since Catan doesn’t use the number 7, this simulation is suggesting you should pick 6 or 8.
 
+_Note: Running this simulation will return the same results every time. This is due to the fact that random number generators rely on an initial seed to generate pseudo-random numbers. If you want to see different results, the common practice is to seed the random number generator with the current time: rand.Seed(time.Now().Unix())_
 
-## The Birthday Problem
+### The Birthday Problem
 
-The [birthday problem](https://en.wikipedia.org/wiki/Birthday_problem) asks what is the probability that in a group of `n` people, at least two people will have the same birthday?
+The [birthday problem](https://en.wikipedia.org/wiki/Birthday_problem) asks what is the probability that in a group of people, at least two people will have the same birthday? Let's create a simulation for this problem that can answer this question for a group of 23 people. 
 
-Let's answer this question for a group of 23 people. Try to guess the answer before moving on.
+First, let’s write a function that randomly chooses a birthday for an individual who belongs to a given size group of people. If at any time two people end up with the same birthday, the function will immediately return true.
 
-**Listing 5: Checking for same birthday in a random group**
-
+**Listing 5: Checking for same birthday in a random group**  
 ```
-10 // hasSame returns True is a random group has the same birthday
-11 func hasSame(groupSize int) bool {
-12     const daysInYear = 365
-13 
-14     seen := make(map[int]bool)
-15     for i := 0; i < groupSize; i++ {
-16         day := rand.Intn(daysInYear)
-17         if seen[day] {
-18             return true
-19         }
-20         seen[day] = true
-21     }
-22 
-23     return false
-24 }
-```
-
-Listing 5 shows the `hasSame` function. For a group of size `n` it will draw `n` random birthdays. Birthdays are represented as days since the beginning of the year, we have 365 of these.
-
-On line 14 we initialized a map for already seen birthdays. On line 16 we draw a random day and on line 17 we check if we've seen this day already. If the currently drawn birthday was already seen, we return `true` on line 18. Otherwise we update the `seen` map on line 20. Finally, if there are no duplicated days, we return `false` on line 23.
-
-Now we can run our simulation.
-
-**Listing 6: Birthday simulation**
-
-```
-26 // simulateBirthdays returns the fraction of groups that have at two people
-27 // with the same birthday
-28 func simulateBirthdays(groupSize, n int) float64 {
-29     same := 0
-30     for i := 0; i < n; i++ {
-31         if hasSame(groupSize) {
-32             same++
-33         }
-34     }
-35 
-36     return float64(same) / float64(n)
-37 }
+10 // simulateBirthdayMatches returns true if the same number is selected
+11 // twice by the random number generator selecting a number between
+12 // 0 and 365 for a specified group of people.
+13 func simulateBirthdayMatches(numOfPeople int) bool {
+14     const daysInYear = 365
+15 
+16     seen := make(map[int]bool)
+17     for i := 0; i < numOfPeople; i++ {
+18         day := rand.Intn(daysInYear)
+19         if seen[day] {
+20             return true
+21         }
+22         seen[day] = true
+23     }
+24 
+25     return false
+26 }
 ```
 
-Listing 6 shows the simulation code. We pass the group size and number of iterations as parameters. On line 29 we initialize the number of groups that had at least one duplicate birthday. On line 30 we run check `n` random groups and on line 31 we check if there was a duplicate birthday in the current group. If there is, we update the `same` counter on line 32. Finally on line 36 we return the fraction of groups that had the same birthday.
+Listing 5 shows the `simulateBirthdayMatches` function. Based on a specified group of people, it will draw random birthdays. Birthdays are represented as days since the beginning of the year: we have 365 of these.
 
-**Listing 7: Running the simulation**
+On line 16, we initialize a map for already seen birthdays. On line 18, we draw a random day and on line 19, we check if we've seen this day already. If that day was already seen, we return `true` on line 20. Otherwise we update the `seen` map on line 22. Finally, if there are no duplicated days, we return `false` on line 25.
 
+Next, let’s write a function that can run the birthday match simulation over and over for a given size group of people.
+
+**Listing 6: Birthday simulation**   
 ```
-39 func main() {
-40     rand.Seed(time.Now().Unix())
-41 
-42     for i := 0; i < 10; i++ {
-43         fmt.Println(simulateBirthdays(23, 1_000_00))
-44     }
-45 }
+28 // simulateBirthdays returns the fraction of groups
+29 // that have two people with the same birthday.
+30 func simulateBirthdays(numOfPeople, runs int) float64 {
+31     same := 0
+32     for i := 0; i < runs; i++ {
+33         if simulateBirthdayMatches(numOfPeople) {
+34             same++
+35         }
+36     }
+37 
+38     return float64(same) / float64(runs)
+39 }
 ```
 
-Listing 7 shows how we run the simulation. On line 40 we seed the random number generator from the current time to get different results every time we run the program. On line 42 we run the simulation 10 times and on line 43 we print the results.
+Listing 6 shows the simulation code. We pass the number of people and the number of times we want to run the simulation. On line 31, we initialize the number of groups that had at least one duplicate birthday. On line 32, we check `runs` random groups and on line 33, we check if there was a duplicate birthday in the current group. If there is, we update the `same` counter on line 34. Finally on line 38, we return the fraction of groups that had the same birthday.
 
-**Listing 8: Output**
+Finally, let’s write a small application to run the simulation.
 
+**Listing 7: Running the simulation**  
+```
+41 func main() {
+42     fmt.Println(simulateBirthdays(23, 1_000_00))
+43 }
+```
+
+Listing 7 shows how we run the simulation. On line 41, we run the simulation and print the results.
+
+**Listing 8: Output**  
 ```
 0.50536
-0.50797
-0.51021
-0.50651
-0.50869
-0.50819
-0.50825
-0.50587
-0.50783
-0.50739
 ```
 
-Listing 8 shows the output of our 10 simulations. We see that the chance that two people in a group of 23 have the same birthday is about 50% which matches the [expected result](https://en.wikipedia.org/wiki/Birthday_problem).
+Listing 8 shows the output of our simulation. We see that the chance that two people in a group of 23 having the same birthday is about 50%, which matches the [expected result](https://en.wikipedia.org/wiki/Birthday_problem).
 
-
-## Sick or Not?
+### Sick or Not?
 
 The following question is taken from Nassim Taleb's [Fooled By Randomness](https://www.amazon.com/Fooled-Randomness-Hidden-Markets-Incerto/dp/0812975219) book which I highly recommend.
 
-> A test of a disease presents a rate of 5% false positives. The disease strikes 1/1000 of the population. People are tested at random, regardless of whether they are suspected of having the disease. A patient’s test is positive. What is the probability of the patient being stricken with the disease?
+The book makes this statement which we will base this simulation on.
 
-Try to guess the answer before moving on.
+_The test of a disease presents a rate of 5% false positives. The disease strikes 1/1000 of the population. People are tested at random, regardless of whether they are suspected of having the disease. A patient’s test is positive. What is the probability of the patient being stricken with the disease?_
 
-**Listing 9: A random event**
+To be clear, a “false positive” is when a healthy person is diagnosed as sick.
 
+**Listing 9: A random event**  
 ```
-10 // probability returns true 1/n of times
-11 func probability(n int) bool {
-12     return rand.Intn(n) == 1
-13 }
+11 // oneChanceIn returns true if the number 1 is selected randomly
+12 // from a group of n numbers.
+13 func oneChanceIn(n int) bool {
+14     return rand.Intn(n) == 1
+15 }
 ```
 
-Listing 9 shows the `probability` function which returns `true` 1/n of the times. On line 12 we compare `rand.Intn` which returns a number between 0 and n, to the number 1. The probability of `rand.Intn(n)` returning 1 (or any other number between 0 and n-1) is 1/n.
+Listing 9 shows the `oneChanceIn` function which returns `true` if the number 1 is selected randomly from a range of numbers. On line 13, we generate a random number and compare the number to 1. The probability of choosing the number 1 randomly (or any other number between 0 and n-1) is 1/n.
 
-**Listing 10: The simulation**
 
+**Listing 10: The isSick**  
 ```
-15 func simulate(n int) float64 {
-16     numSick, numDiagnosed := 0, 0
-17     for i := 0; i < n; i++ {
-18         sick := probability(1000)
-19         if sick {
-20             numSick++
-21             numDiagnosed++
-22         } else {
-23             falsePositive := probability(20)
-24             if falsePositive {
-25                 numDiagnosed++
-26             }
-27         }
-28     }
-29 
-30     return float64(numSick) / float64(numDiagnosed)
+16 // isSick returns true if a randomly sampled person is sick.
+17 func isSick() bool {
+18     // The disease strikes 1/1000 of the population.
+19     return oneChanceIn(1000)
+20 }
+``` 
+
+Listing 10 shows the `isSick` function which returns `true` if a random sample from the population is sick or not. According to the problem statement, “The disease strikes 1/1000 of the population.”, so we use `oneChanceIn(1000)` on line 19.
+
+**Listing 11: diagnosed**  
+```
+
+22 // diagnosed returns true if a person is sick or misdiagnosed as sick.
+23 func diagnosed(sick bool) bool {
+24     if sick {
+25         return true // We're 100% correct in sick people.
+26     }
+27 
+28     // The test of a disease presents a rate of 5% (1 in 20) false positives.
+29     // (false positive = healthy diagnosed as sick)
+30     return oneChanceIn(20)
 31 }
 ```
 
-Listing 10 shows the simulation code. On line 16 we initialized the counters for the number of people who are actually sick `numSick` and the number of people who have been diagnosed as sick `numDiagnosed`. On line 18 we draw a random person who might be sick 1/1000 of the times. If the person is sick, we increment both `numSick` and `numDiagnosed` on lines 20 & 21. On line 32, if the person is not sick, we use a 1/20 probability (5%) to see if they were incorrectly diagnosed as sick. If this is the case, we increment `numDiagnosed` on line 25. Finally we return the fraction of people who are actually sick out of the number of people who were diagnosed as sick.
+Listing 11 shows the `diagnosed` function that simulates testing a person for the disease. On line 25, we return `true` if the person is sick since we assume the test is accurate 100% of the time for sick people. If the person is healthy, then on line 30 we have a 1 in 20 (5%) chance of incorrectly diagnosing the patient as sick (false positive).
 
-**Listing 11: Running the simulation**
 
+**Listing 12: The simulation**  
 ```
-33 func main() {
-34     rand.Seed(time.Now().Unix())
-35     for i := 0; i < 10; i++ {
-36         fmt.Println(simulate(1_000_000))
-37     }
-38 }
+33 // simulate run selects sampleSize random people and return the fraction of people
+34 // actually sick from the total number of people diagnosed as sick.
+35 func simulate(sampleSize int) float64 {
+36     var numSick, numDiagnosed int
+37 
+38     for i := 0; i < sampleSize; i++ {
+39         sick := isSick()
+40         if sick {
+41             numSick++
+42         }
+43 
+44         if diagnosed(sick) {
+45             numDiagnosed++
+46         }
+47     }
+48 
+49     return float64(numSick) / float64(numDiagnosed)
+50 }
 ```
 
-Listing 11 shows 10 runs of the simulation. One line 34 we initialize the random seed from the current time and on line 35 we run 10 simulations, printing the results on line 36.
+Listing 12 shows the simulation code. On line 36, we initialize the number of actual sick people (`numSick`) and the number of people diagnosed as sick (`numDiagnosed`). On line 38, we sample `sampleSize` people from the population and on line 39, we determine if the person is actually sick or not. On line 41, we increment the number of actual sick people if the person is actually sick and on line 45, we increment the number of people diagnosed as sick according to the output of `diagnosed`. Finally, on line 49 we return the ratio of people who are actually sick from the people who were diagnosed as sick.
 
-**Listing 12: Simulation output**
+**Listing 13: Running the simulation**  
+```
+52 func main() {
+53     fmt.Println(simulate(1_000_000))
+54 }
+```
 
+Listing 13 shows a run of the simulation. One line 53, we run the simulation for 1 million people and print the results.
+
+**Listing 14: Simulation output**  
 ```
 0.020525227299332736
-0.020034310729004398
-0.019121021356710007
-0.02017849453947626
-0.01984588399913285
-0.019073462324996068
-0.01868566904196358
-0.019913864633134458
-0.020406974486427712
-0.018889547520252913
 ```
 
-Listing 12 shows the output of the 10 simulation runs. The chances that a person is sick given a positive test is about 2% which matches the [expected result](https://psychscenehub.com/psychinsights/well-understand-probabilities-medicine/).
+Listing 14 shows the output of the simulation run. The chance that a person is sick given a positive test is about 2% which matches the [expected result](https://psychscenehub.com/psychinsights/well-understand-probabilities-medicine/).
 
-## Conclusion
+### Conclusion
 
-Simulation is a simple and powerful tool, you don't need to know advanced probability and statistics in order to solve data driven problems. All you need is `math/rand` and some simple logic. After you get your results, you are encouraged to validate them with math. If you don't have the math skills - ask around (I’m asking my friend & college [Shlomo Yona](https://www.mathematic.ai/) whenever I need some math guidance).
+Simulations are a simple and powerful tool. You don't need to know advanced probability and statistics in order to solve data driven problems. All you need is `math/rand` and basic programming skills. After you get your results, you are encouraged to validate them. If you don't have the skills - ask around (I ask my friend & college [Shlomo Yona](https://www.mathematic.ai/) whenever I need some math guidance).
 
-If you want to learn more, I recommend watching [Statistics for Hackers](https://www.youtube.com/watch?v=Iq9DzN6mvYA). The examples are in Python, but very easy to follow. You should also read about the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) on Wikipedia and see the wide variety of applications it has.
+If you want to learn more, I recommend watching [Statistics for Hackers](https://www.youtube.com/watch?v=Iq9DzN6mvYA). The examples are in Python, but are very easy to follow. You should also read about the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) on Wikipedia and see the wide variety of applications it has.
 
 You can find the code for these simulations [here](https://github.com/353words/simulations).
 Catan photo by [Galen Crout](https://unsplash.com/@galen_crout)
