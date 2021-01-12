@@ -1,4 +1,4 @@
-// Package main simulate percision of a medical test.
+// Package main simulate precision of a medical test.
 // For more details see:
 // https://psychscenehub.com/psychinsights/well-understand-probabilities-medicine/
 package main
